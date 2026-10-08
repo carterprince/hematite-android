@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Hematite" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+    <color name="background">#FCF8F8</color>
+    <color name="icon_background">#E6E4EA</color>
+</resources>
