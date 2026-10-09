@@ -1,6 +1,6 @@
 # Hematite for Android
 
-An Android port of [Hematite](../hematite), the Markdown notes vault. Notes are
+An Android port of Hematite, the Markdown notes vault for Linux. Notes are
 plain files in a vault folder, edited with formatting shown in place, and synced
 with Hematite on your computer through a WebDAV server.
 
