@@ -98,3 +98,7 @@ a server with user `test` and password `secret`, for example
   Markdown source in the text field and hides markers with tiny transparent
   text, so cursor positions always match the file. Tables and images are drawn
   over lines that are hidden and enlarged to make room for them.
+
+## License
+
+Licensed under the GNU General Public License, version 3 or later. See [LICENSE](LICENSE).
