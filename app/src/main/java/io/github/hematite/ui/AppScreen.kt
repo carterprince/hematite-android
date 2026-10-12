@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -28,12 +29,16 @@ import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,6 +48,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -114,10 +120,33 @@ private fun TwoPane(viewModel: NotesViewModel, snackbar: SnackbarHostState, sear
                     }
                 }
             }
-        } else if (viewModel.screen == Screen.Editor && viewModel.document != null) {
-            EditorScreen(viewModel, snackbar, showBack = true)
-        } else NotesScreen(viewModel, snackbar, searchFocus)
+        } else if (viewModel.document != null) NotesDrawer(viewModel, snackbar, searchFocus)
+        else NotesScreen(viewModel, snackbar, searchFocus)
     }
+}
+
+/** The open note, with the notes list in a drawer that opens with a swipe right, like Obsidian. */
+@Composable
+private fun NotesDrawer(viewModel: NotesViewModel, snackbar: SnackbarHostState, searchFocus: FocusRequester) {
+    val notes = viewModel.screen == Screen.Notes
+    val drawer = rememberDrawerState(if (notes) DrawerValue.Open else DrawerValue.Closed)
+    // The Notes screen is the open drawer, so opening a note or Ctrl+F slides it.
+    LaunchedEffect(notes) { if (notes) drawer.open() else drawer.close() }
+    LaunchedEffect(drawer) {
+        snapshotFlow { drawer.currentValue }.collect {
+            if (viewModel.screen == Screen.Notes || viewModel.screen == Screen.Editor)
+                viewModel.screen = if (it == DrawerValue.Open) Screen.Notes else Screen.Editor
+        }
+    }
+    ModalNavigationDrawer(
+        drawerState = drawer,
+        drawerContent = {
+            ModalDrawerSheet(drawer, Modifier.fillMaxWidth(0.85f), windowInsets = WindowInsets(0)) {
+                // Its own snackbar host, so messages don't also appear under the scrim.
+                NotesScreen(viewModel, remember { SnackbarHostState() }, searchFocus)
+            }
+        },
+    ) { EditorScreen(viewModel, snackbar, showBack = true) }
 }
 
 @Composable

@@ -23,6 +23,8 @@ with Hematite on your computer through a WebDAV server.
   folder, and can be restored or deleted from Settings → Trash.
 - **WebDAV sync:** the same protocol as the desktop app, so both can share one
   server folder.
+- **Notes drawer:** on a phone, swipe right in an open note to slide in the
+  notes list, like Obsidian.
 - **Wide screens:** in landscape or on tablets, the notes list and the open note
   appear side by side.
 - **Keyboard shortcuts** with a hardware keyboard: Ctrl+N, Ctrl+F, Ctrl+S,
